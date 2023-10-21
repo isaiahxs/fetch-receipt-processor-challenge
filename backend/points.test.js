@@ -9,6 +9,8 @@ const {
     pointsForItemsCount,
     pointsForItemDescriptions,
     pointsForDay,
+    pointsForTimeRange,
+    calculatePoints
 } = require('./points');
 const { default: expect } = require('expect');
 
@@ -83,4 +85,41 @@ describe('Points calculation functions', () => {
         expect(pointsForDay('2025-12-02')).toBe(0);
     })
 
+    test('calculates points based on time', () => {
+        expect(pointsForTimeRange('08:00')).toBe(0);
+        expect(pointsForTimeRange('10:00')).toBe(0);
+        expect(pointsForTimeRange('12:00')).toBe(0);
+
+        expect(pointsForTimeRange('13:59')).toBe(0);
+        expect(pointsForTimeRange('16:00')).toBe(0);
+
+        expect(pointsForTimeRange('14:00')).toBe(10);
+        expect(pointsForTimeRange('15:00')).toBe(10);
+        expect(pointsForTimeRange('15:59')).toBe(10);
+    })
+
+    test('calculates overall points correctly', () => {
+        let receipt = {
+            retailer: "Walgreens",
+            purchaseDate: "2022-01-02",
+            purchaseTime: "08:13",
+            total: "2.65",
+            items: [
+                { shortDescription: "Pepsi - 12-oz", "price": "1.25" },
+                { shortDescription: "Dasani", "price": "1.40" }
+            ]
+        }
+        expect(calculatePoints(receipt)).toBe(15);
+
+        receipt = {
+            retailer: "Target",
+            purchaseDate: "2022-01-02",
+            purchaseTime: "13:13",
+            total: "1.25",
+            items: [
+                { shortDescription: "Pepsi - 12-oz", "price": "1.25" }
+            ]
+        }
+        expect(calculatePoints(receipt)).toBe(31);
+    })
 })

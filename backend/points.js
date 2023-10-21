@@ -40,6 +40,32 @@ const pointsForDay = (purchaseDate) => {
     return day % 2 === 1 ? 6 : 0;
 }
 
+//10 points if the time of purchase is after 2:00PM and before 4:00PM
+const pointsForTimeRange = (purchaseTime) => {
+    const time = purchaseTime.split(':').map(Number);
+    return (time[0] >= 14 && time[0] < 16) ? 10 : 0;
+};
+
+// Now the main calculatePoints function becomes a composition of these smaller functions.
+const calculatePoints = (receipt) => {
+    let points = 0;
+
+    points += pointsForRetailerName(receipt.retailer);
+
+    points += pointsForRoundTotal(receipt.total);
+
+    points += pointsForMultipleOfQuarter(receipt.total);
+
+    points += pointsForItemsCount(receipt.items);
+
+    points += pointsForItemDescriptions(receipt.items);
+
+    points += pointsForDay(receipt.purchaseDate);
+
+    points += pointsForTimeRange(receipt.purchaseTime);
+
+    return points;
+}
 
 module.exports.router = router;
 module.exports.receipts = receipts;
@@ -49,3 +75,5 @@ module.exports.pointsForMultipleOfQuarter = pointsForMultipleOfQuarter;
 module.exports.pointsForItemsCount = pointsForItemsCount;
 module.exports.pointsForItemDescriptions = pointsForItemDescriptions;
 module.exports.pointsForDay = pointsForDay;
+module.exports.pointsForTimeRange = pointsForTimeRange;
+module.exports.calculatePoints = calculatePoints;
