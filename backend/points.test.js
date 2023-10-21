@@ -10,9 +10,9 @@ const {
     pointsForItemDescriptions,
     pointsForDay,
     pointsForTimeRange,
-    calculatePoints
+    calculatePoints,
+    calculateAndCachePoints
 } = require('./points');
-const { default: expect } = require('expect');
 
 describe('Points calculation functions', () => {
     test('calculates points for retailer name', () => {
@@ -200,3 +200,40 @@ describe('POST /receipts/process', () => {
         expect(response.body).toHaveProperty('id');
     });
 });
+
+describe('GET /receipts/:id/points', () => {
+    const validId = 'valid-id';
+    const invalidId = 'invalid-id';
+
+    beforeAll(() => {
+        receipts[validId] = {
+            retailer: 'Walmart',
+            purchaseDate: '2023-10-11',
+            purchaseTime: '14:00',
+            total: 100.0,
+            items: [
+                { shortDescription: 'item1', price: '50' },
+                { shortDescription: 'item2', price: '50' },
+            ],
+        };
+        receipts[validId].points = calculateAndCachePoints(validId);
+    });
+
+    afterAll(() => {
+        delete receipts[validId];
+    });
+
+    it('should return points for a valid receipt id', async () => {
+        const response = await request(app).get(`/receipts/${validId}/points`);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('points');
+    })
+
+    it('should return 404 for an invalid receipt id', async () => {
+        const response = await request(app).get(`/receipts/${invalidId}/points`);
+
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty('error', 'Receipt not found.');
+    })
+})

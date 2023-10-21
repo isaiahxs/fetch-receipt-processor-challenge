@@ -134,7 +134,24 @@ router.post(`/receipts/process`, (req, res) => {
     res.json({ id });
 });
 
+const calculateAndCachePoints = (id) => {
+    if (receipts[id] && receipts[id].points === undefined) {
+        receipts[id].points = calculatePoints(receipts[id]);
+    }
+    return receipts[id] ? receipts[id].points : null;
+}
 
+router.get(`/receipts/:id/points`, (req, res) => {
+    const id = req.params.id;
+
+    const points = calculateAndCachePoints(id);
+
+    if (points === null) {
+        return res.status(404).json({ error: 'Receipt not found.' });
+    }
+
+    res.json({ points });
+})
 
 module.exports.router = router;
 module.exports.receipts = receipts;
@@ -146,3 +163,4 @@ module.exports.pointsForItemDescriptions = pointsForItemDescriptions;
 module.exports.pointsForDay = pointsForDay;
 module.exports.pointsForTimeRange = pointsForTimeRange;
 module.exports.calculatePoints = calculatePoints;
+module.exports.calculateAndCachePoints = calculateAndCachePoints;
