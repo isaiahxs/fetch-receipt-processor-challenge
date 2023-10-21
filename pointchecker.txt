@@ -1,0 +1,24 @@
+Double checking points
+WALGREENS (Temporary Receipt ID: dc0b561d-90e5-419c-b4f7-70a1a5843f0a)
+9 points for alphanumeric characters in Walgreens
+0 points for not being a rounded dollar amount
+0 points for not being divisible by 0.25
+5 points for having 2 items on receipt
+0 points for shortened pepsi name not being multiple of 3
+1 point for Dasani name being multiple of 3 ($1.40 * 0.2 = 0.28 and rounded up to nearest integer would be 1)
+0 points for purchase date not being odd
+0 points for purchase time since it was not between 14:00 - 16:00
+
+Total is 15 points which aligns with our endpoint results!
+
+
+TARGET (Temporary Receipt ID: 023d986b-9e40-428e-bc16-0d66dfb9cbf8)
+6 points for alphanumeric characters in Target
+0 points for rounded dollar amount
+25 points for total being divisible by 0.25
+0 points since there are not multiples of 2 items
+0 points for shortened pepsi name not being a multiple of 3
+0 points for purchase date not being odd
+0 points for purchase time since it was not between 14:00 - 16:00
+
+Total is 31 points which aligns with our endpoint results!

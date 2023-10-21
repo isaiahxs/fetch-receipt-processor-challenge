@@ -1,0 +1,30 @@
+{
+  "name": "receipt-processor-challenge",
+  "version": "1.0.0",
+  "description": "Build a webservice that fulfils the documented API. The API is described below. A formal definition is provided  in the [api.yml](./api.yml) file, but the information in this README is sufficient for completion of this challenge. We will use the  described API to test your solution.",
+  "main": "app.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isaiahxs/fetch-receipt-processor-challenge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/isaiahxs/fetch-receipt-processor-challenge/issues"
+  },
+  "homepage": "https://github.com/isaiahxs/fetch-receipt-processor-challenge#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
