@@ -21,29 +21,7 @@
     max-width: 500px;
 }
 
-/* display: flex;
-flex-direction: column;
-margin: auto;
-justify-content: center;
-margin-top: 20px;
-font-size: 1.1rem;
-text-align: left;
-max-width: 500px; */
-
-/* .receipt-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-.items-list {
-    list-style-type: none;
-    margin-left: 20px
-} */
-
-.example-section {
-    /* padding: 20px; */
-}
+.example-section {}
 
 .example-2 {
     margin-top: 40px;
@@ -54,13 +32,10 @@ max-width: 500px; */
     flex-direction: column;
     margin: auto;
     max-width: 500px;
-    /* margin-top: 20px; */
     font-size: 1.1rem;
     list-style-type: none;
     margin-bottom: 40px;
     text-align: left;
-    /* margin-left: 20px; */
-    /* line-height: 1.9; */
 }
 
 .points-list li {
@@ -70,7 +45,6 @@ max-width: 500px; */
 .example-header {
     margin-top: 20px;
     margin-bottom: 20px;
-    /* font-size: 1.4rem; */
 }
 
 .example-code {
@@ -78,7 +52,6 @@ max-width: 500px; */
 }
 
 /* Point Breakdown Section */
-
 .points-section {
     display: flex;
     flex-direction: column;
@@ -95,14 +68,11 @@ max-width: 500px; */
     justify-content: center;
     font-size: 1.3rem;
     font-weight: bold;
-    /* display: block; */
-    /* margin-bottom: 10px; */
 }
 
 .breakdown-header {
     display: flex;
     justify-content: center;
-    /* display: block; */
     margin-bottom: 20px;
     font-size: 1.3rem;
     font-weight: bolder;
@@ -119,6 +89,5 @@ max-width: 500px; */
 }
 
 .total-breakdown {
-    /* margin-top: 20px; */
     font-weight: bold;
 }
