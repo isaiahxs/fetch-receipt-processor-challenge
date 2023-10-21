@@ -59,22 +59,38 @@ cd fetch-backend-take-home
 
 ## Install dependencies
 
-Run the following command at the root directory and the frontend (if you'd like to use the FE) directory to install the required dependencies:
+Run the following command at the root directory to install the required dependencies:
 ```
 npm install
 ```
 
+To install the required frontend dependencies, run the following from within the frontend directory:
+```
+npm install
+```
+```
+npm run build
+```
+
 ## Run the Server
 
-Once the dependencies are installed, run the server using (if you'd like to see the FE, run npm start from within the frontend directory as well):
+Once the dependencies are installed, run the server using 
 ```
 npm start
 ```
 
 This will start the server on `http://localhost:3001`. You can make API requests to this URL using Postman or curl.
 
+If you'd like to use the frontend, run the following from within the frontend directory as well:
+
+```
+npm start
+```
+
+This will open the client-side on `http://localhost:3000`.
+
 ## Running Tests with Jest
-Once the dependencies are installed, to run server-side validations, run the following command from the root directory of the project:
+Once the dependencies are installed, to run server-side tests, run the following command from the root directory of the project:
 
 ```
 npm run test
