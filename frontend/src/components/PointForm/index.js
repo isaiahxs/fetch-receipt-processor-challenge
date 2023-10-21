@@ -47,8 +47,11 @@ export default function PointForm() {
 
     const removeLastItem = () => {
         const list = [...formData.items];
-        list.pop();
-        setFormData({ ...formData, items: list });
+
+        if (list.length > 1) {
+            list.pop();
+            setFormData({ ...formData, items: list });
+        }
     };
 
     const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
