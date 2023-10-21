@@ -15,6 +15,8 @@ export default function PointForm() {
         ],
     });
 
+    const [formErrors, setFormErrors] = useState({});
+
     const [receiptId, setReceiptId] = useState(null);
     const [latestPoints, setLatestPoints] = useState(null);
     const [allReceiptIds, setAllReceiptIds] = useState([]);
@@ -51,8 +53,59 @@ export default function PointForm() {
 
     const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
+    const validateForm = () => {
+        let errors = {};
+
+        const { retailer, purchaseDate, purchaseTime, totalCost, items } = formData;
+
+        // Validate retailer
+        if (!retailer || typeof retailer !== 'string') {
+            errors['retailer'] = 'Invalid retailer name. Must be a string.';
+        }
+
+        // Validate purchase date
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!purchaseDate || !dateRegex.test(purchaseDate)) {
+            errors['purchaseDate'] = 'Invalid purchase date. Structure must be YYYY-MM-DD.';
+        }
+
+        // Validate purchase time
+        const timeRegex = /^\d{2}:\d{2}$/;
+        if (!purchaseTime || !timeRegex.test(purchaseTime)) {
+            errors['purchaseTime'] = 'Invalid purchase time. Structure must be HH:MM.';
+        }
+
+        // Validate total
+        if (!totalCost || isNaN(parseFloat(totalCost))) {
+            errors['totalCost'] = 'Invalid total. Must be a valid number.';
+        }
+
+        // Validate items
+        if (!items || !Array.isArray(items) || items.length === 0) {
+            errors['items'] = 'Invalid items. Must be a non-empty array.';
+        } else {
+            items.forEach((item, index) => {
+                if (!item.shortDescription || typeof item.shortDescription !== 'string') {
+                    errors[`item[${index}].shortDescription`] = `Invalid shortDescription for item at index ${index}. Please enter a valid string description for this item.`;
+                }
+
+                if (item.price === undefined || isNaN(parseFloat(item.price))) {
+                    errors[`item[${index}].price`] = `Invalid price for item at index ${index}. Please enter a valid price number for this item.`;
+                }
+            });
+        }
+
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
+    }
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
 
         // Prepare the complete data object
         const completeData = {
@@ -127,6 +180,12 @@ export default function PointForm() {
                     value={formData.retailer}
                     onChange={handleChange}
                 />
+                {formErrors.retailer &&
+                    <div className='error'>
+                        {formErrors.retailer}
+                    </div>
+                }
+
                 Purchase Date
                 <input
                     type="date"
@@ -134,6 +193,12 @@ export default function PointForm() {
                     value={formData.purchaseDate}
                     onChange={handleChange}
                 />
+                {formErrors.purchaseDate &&
+                    <div className='error'>
+                        {formErrors.purchaseDate}
+                    </div>
+                }
+
                 Purchase Time
                 <input
                     type="time"
@@ -141,6 +206,12 @@ export default function PointForm() {
                     value={formData.purchaseTime}
                     onChange={handleChange}
                 />
+                {formErrors.purchaseTime &&
+                    <div className='error'>
+                        {formErrors.purchaseTime}
+                    </div>
+                }
+
                 Total Cost ($)
                 <input
                     type="number"
@@ -150,6 +221,11 @@ export default function PointForm() {
                     value={formData.totalCost}
                     onChange={handleChange}
                 />
+                {formErrors.totalCost &&
+                    <div className='error'>
+                        {formErrors.totalCost}
+                    </div>
+                }
 
                 {formData.items.map((x, i) => {
                     return (
@@ -161,6 +237,11 @@ export default function PointForm() {
                                 value={x.shortDescription}
                                 onChange={e => handleItemChange(e, i)}
                             />
+                            {formErrors[`item[${i}].shortDescription`] &&
+                                <div className='error'>
+                                    {formErrors[`item[${i}].shortDescription`]}
+                                </div>
+                            }
                             Item Price
                             <input
                                 type="number"
@@ -170,6 +251,11 @@ export default function PointForm() {
                                 value={x.price}
                                 onChange={e => handleItemChange(e, i)}
                             />
+                            {formErrors[`item[${i}].price`] &&
+                                <div className='error'>
+                                    {formErrors[`item[${i}].price`]}
+                                </div>
+                            }
                         </div>
                     );
                 })}
@@ -182,7 +268,10 @@ export default function PointForm() {
                     Remove Last Item
                 </button>
 
-                <button className={`submit-receipt ${!isFormValid() ? 'disabled-button' : ''}`} type="submit" disabled={!isFormValid()}>
+                {/* <button className={`submit-receipt ${!isFormValid() ? 'disabled-button' : ''}`} type="submit" disabled={!isFormValid()}>
+                    Submit
+                </button> */}
+                <button className='submit-receipt' type='submit'>
                     Submit
                 </button>
             </form>
