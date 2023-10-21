@@ -2,7 +2,6 @@ const express = require('express');
 const { router: pointsRouter } = require('./backend/points');
 const path = require('path');
 const app = express();
-const port = 3001;
 
 // Our middleware for parsing JSON bodies
 app.use(express.json());
@@ -17,9 +16,5 @@ app.use('/', pointsRouter);
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './frontend/build/index.html'));
 });
-
-// app.listen(port, () => {
-//     console.log(`Server running on http://localhost:${port}`);
-// });
 
 module.exports = app;

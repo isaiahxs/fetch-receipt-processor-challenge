@@ -67,6 +67,75 @@ const calculatePoints = (receipt) => {
     return points;
 }
 
+router.get('/test', (req, res) => {
+    res.send('Test endpoint');
+});
+
+router.post(`/receipts/process`, (req, res) => {
+    let errors = [];
+
+    const { retailer, purchaseDate, purchaseTime, total, items } = req.body;
+
+    // Validate that retailer name exists and is a string
+    if (!retailer || typeof retailer !== 'string') {
+        errors.push('Invalid retailer name. Must be a string.');
+    }
+
+    // Validate purchase date exists and is in correct format
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!purchaseDate || !dateRegex.test(purchaseDate)) {
+        errors.push('Invalid purchase date. Structure must be YYYY-MM-DD.');
+    }
+
+    // Check if date is valid
+    const parsedDate = new Date(purchaseDate);
+    if (isNaN(parsedDate.getTime()) || parsedDate.toISOString().split('T')[0] !== purchaseDate) {
+        errors.push('Invalid purchase date. Please insert a valid date from the calendar year.');
+    }
+
+    // Validate purchase time exists and is in correct format
+    const timeRegex = /^\d{2}:\d{2}$/;
+    if (!purchaseTime || !timeRegex.test(purchaseTime)) {
+        errors.push('Invalid purchase time. Structure must be HH:MM.');
+    }
+
+    // Validate total exists and is a valid number
+    if (!total || isNaN(parseFloat(total))) {
+        errors.push('Invalid total. Must be a valid number.');
+    }
+
+    // Validate items array exists and has at least one item in it
+    if (!items || !Array.isArray(items) || items.length === 0) {
+        errors.push('Invalid items. Must be a non-empty array.');
+    } else {
+        // Validate individual items
+        items.forEach((item, index) => {
+            if (!item.shortDescription || typeof item.shortDescription !== 'string') {
+                errors.push(`Invalid shortDescription for item at index ${index}. Please enter a valid string description for this item.`);
+            }
+
+            if (item.price === undefined || isNaN(parseFloat(item.price))) {
+                errors.push(`Invalid price for item at index ${index}. Please enter a valid price number for this item.`);
+            }
+        })
+    }
+
+    if (errors.length > 0) {
+        return res.status(400).json({ errors });
+    }
+
+    // Generate a unique ID from uuidv4
+    const id = uuidv4();
+
+    // Store the receipt in memory with the generated ID
+    receipts[id] = req.body;
+
+    // Respond with the generated ID
+    res.json({ id });
+});
+
+
+
 module.exports.router = router;
 module.exports.receipts = receipts;
 module.exports.pointsForRetailerName = pointsForRetailerName;
