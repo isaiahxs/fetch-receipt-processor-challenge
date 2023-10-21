@@ -1,5 +1,5 @@
 const express = require('express');
-const { router: pointsRouter } = require('./backend/routes/api/points');
+const { router: pointsRouter } = require('./backend/points');
 const path = require('path');
 const app = express();
 const port = 3001;
