@@ -6,7 +6,7 @@ This project is a full-stack Receipt Processor using Node.js, Express, UUID, and
 
 <strong>My project includes server-side and client-side validations, modularized functions, a caching point system to increase efficiency and reduce redundant calls, and it includes Jest tests.
 
-![Landing Page](<Landing Page.png>)
+![Landing Page](https://github.com/isaiahxs/fetch-receipt-processor-challenge/assets/107521578/4f6800bf-a02e-4567-8020-008a72529fb0)
 
 ## Pre-requisites
 1. Node.js (v14.x.x or higher)
@@ -97,17 +97,21 @@ npm run test
 ```
 
 ## Random Receipt ID + Point Breakdown
-![How your points are calculated](<Receipt IDs and Points.png>)
+![Receipt IDs and Points](https://github.com/isaiahxs/fetch-receipt-processor-challenge/assets/107521578/9ec01dbc-cbb7-4eeb-9d48-bbab494ef05b)
+
 
 ## Breakdown Examples
-![Example 1 Breakdown](<Example Breakdown.png>)
-![Example 2 Breakdown](<Example 2 Breakdown.png>)
+![Example Breakdown](https://github.com/isaiahxs/fetch-receipt-processor-challenge/assets/107521578/a934714f-c50a-42c6-8a2e-26689c3c9216)
+![Example 2 Breakdown](https://github.com/isaiahxs/fetch-receipt-processor-challenge/assets/107521578/a042807d-ecd6-40e2-bd81-06c17135410a)
+
 
 ## Footer
-![Footer image](Footer.png)
+![Footer](https://github.com/isaiahxs/fetch-receipt-processor-challenge/assets/107521578/67a37940-c79c-4220-ae52-ef031f63a0ef)
+
 
 ## Navigation Panel
-![Nav Panel](<Nav Panel.png>)
+![Nav Panel](https://github.com/isaiahxs/fetch-receipt-processor-challenge/assets/107521578/c39f0d17-f499-4989-8e10-56baae42289c)
+
 
 # Challenge Instructions
 Build a web service that fulfills the documented API. The API is described below. A formal definition is provided 
