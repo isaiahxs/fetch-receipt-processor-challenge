@@ -3,69 +3,10 @@ const router = express.Router();
 // For our unique identifiers. V4 UUIDs are random-based.
 const { v4: uuidv4 } = require('uuid');
 
-// Our in-memory storage for receipts
-const receipts = {};
-
-// Modularizing calculatePoints
-
-// One point for every alphanumeric character in the retailer name
-const pointsForRetailerName = (retailer) => retailer.replace(/[^a-zA-Z0-9]/g, '').length;
-
-// 50 points if the total is a round dollar amound with no cents
-const pointsForRoundTotal = (total) => parseFloat(total) % 1 === 0 ? 50 : 0;
-
-// 25 points if the total is a multiple of 0.25
-const pointsForMultipleOfQuarter = (total) => parseFloat(total) % 0.25 === 0 ? 25 : 0;
-
-// 5 points for every two items on the receipt. Using Math.floor to ensure that only complete pairs contribute to the score.
-const pointsForItemsCount = (items) => Math.floor(items.length / 2) * 5;
-
-const pointsForItemDescriptions = (items) => {
-    let points = 0;
-    for (let item of items) {
-        // If the trimmed length of the item description is a multiple of 3, multiply the price by 0.2 and round up to the nearest integer
-        const descriptionLength = item.shortDescription.trim().length;
-
-        if (descriptionLength % 3 === 0) {
-            points += Math.ceil(parseFloat(item.price) * 0.2);
-        }
-    }
-    // The result is the number of points earned
-    return points;
-};
-
-// 6 points if the day in the purchase date is odd
-const pointsForDay = (purchaseDate) => {
-    const day = parseInt(purchaseDate.split('-')[2]);
-    return day % 2 === 1 ? 6 : 0;
-}
-
-//10 points if the time of purchase is after 2:00PM and before 4:00PM
-const pointsForTimeRange = (purchaseTime) => {
-    const time = purchaseTime.split(':').map(Number);
-    return (time[0] >= 14 && time[0] < 16) ? 10 : 0;
-};
-
-// Now the main calculatePoints function becomes a composition of these smaller functions.
-const calculatePoints = (receipt) => {
-    let points = 0;
-
-    points += pointsForRetailerName(receipt.retailer);
-
-    points += pointsForRoundTotal(receipt.total);
-
-    points += pointsForMultipleOfQuarter(receipt.total);
-
-    points += pointsForItemsCount(receipt.items);
-
-    points += pointsForItemDescriptions(receipt.items);
-
-    points += pointsForDay(receipt.purchaseDate);
-
-    points += pointsForTimeRange(receipt.purchaseTime);
-
-    return points;
-}
+const {
+    calculateAndCachePoints,
+    receipts
+} = require('./utils');
 
 router.get('/test', (req, res) => {
     res.send('Test endpoint');
@@ -88,15 +29,35 @@ router.post(`/receipts/process`, (req, res) => {
     }
 
     // Check if date is valid
+    // New Date object created from purchaseDate string
     const parsedDate = new Date(purchaseDate);
+    // isNan(parsedDate.getTime()) returns numeric value related to the time for the specified date according to universal time
+    // if purchaseDate is invalid, we will return Nan and add that error
+    // parsedDate.toISOString().split('T')[0] converts Date into string "2022-01-01T00:00:00.000Z"
+    // we split at the T and check the first part to see if it matches the format we passed in
     if (isNaN(parsedDate.getTime()) || parsedDate.toISOString().split('T')[0] !== purchaseDate) {
         errors.push('Invalid purchase date. Please insert a valid date from the calendar year.');
     }
 
     // Validate purchase time exists and is in correct format
-    const timeRegex = /^\d{2}:\d{2}$/;
+    // const timeRegex = /^\d{2}:\d{2}$/;
+    // if (!purchaseTime || !timeRegex.test(purchaseTime)) {
+    //     errors.push('Invalid purchase time. Structure must be HH:MM.');
+    // }
+
+    // Validate purchase time exists and is in correct format
+    // Match strings that start with 0 or 1 and are followed by any digit to cover 00 to 19
+    // | for OR. Then match any string that starts with 2 and is followed by digit between 0 and 3
+    // For second part, match string that starts with digit between 0 and 5 and is followed by any digit
+    // XX:XX
+    const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
     if (!purchaseTime || !timeRegex.test(purchaseTime)) {
         errors.push('Invalid purchase time. Structure must be HH:MM.');
+    } else {
+        const [hour, minute] = purchaseTime.split(':').map(Number);
+        if (hour < 0 || hour >= 24 || minute < 0 || minute >= 60) {
+            errors.push('Invalid purchase time. Hours must be between 00 and 23, and minutes must be between 00 and 59.');
+        }
     }
 
     // Validate total exists and is a valid number
@@ -134,13 +95,6 @@ router.post(`/receipts/process`, (req, res) => {
     res.json({ id });
 });
 
-const calculateAndCachePoints = (id) => {
-    if (receipts[id] && receipts[id].points === undefined) {
-        receipts[id].points = calculatePoints(receipts[id]);
-    }
-    return receipts[id] ? receipts[id].points : null;
-}
-
 router.get(`/receipts/:id/points`, (req, res) => {
     const id = req.params.id;
 
@@ -154,13 +108,3 @@ router.get(`/receipts/:id/points`, (req, res) => {
 })
 
 module.exports.router = router;
-module.exports.receipts = receipts;
-module.exports.pointsForRetailerName = pointsForRetailerName;
-module.exports.pointsForRoundTotal = pointsForRoundTotal;
-module.exports.pointsForMultipleOfQuarter = pointsForMultipleOfQuarter;
-module.exports.pointsForItemsCount = pointsForItemsCount;
-module.exports.pointsForItemDescriptions = pointsForItemDescriptions;
-module.exports.pointsForDay = pointsForDay;
-module.exports.pointsForTimeRange = pointsForTimeRange;
-module.exports.calculatePoints = calculatePoints;
-module.exports.calculateAndCachePoints = calculateAndCachePoints;
