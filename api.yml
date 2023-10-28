@@ -1,4 +1,6 @@
 openapi: 3.0.3
+# openapi specification which is standard for RESTful APIs
+# it is readable by both humans and machines
 info:
     title: Receipt Processor
     description: A simple receipt processor
@@ -60,6 +62,8 @@ paths:
 
 components:
     schemas:
+    # define the structure and type of data that can be sent or received
+    # crucial for validating data to ensure it conforms to the expected format
         Receipt:
             type: object
             required:
@@ -73,6 +77,7 @@ components:
                     description: The name of the retailer or store the receipt is from.
                     type: string
                     pattern: "^\\S+$"
+                    # matches any non-whitespace character
                     example: "Target"
                 purchaseDate:
                     description: The date of the purchase printed on the receipt.
@@ -93,6 +98,9 @@ components:
                     description: The total amount paid on the receipt.
                     type: string
                     pattern: "^\\d+\\.\\d{2}$"
+                    # d+ matches one or more digits \d is regex for digit and + means one or more occurrences
+                    # \\. matches the literal decimal character
+                    # \\d{2} matches exactly two digits
                     example: "6.49"
 
         Item:
@@ -105,6 +113,8 @@ components:
                     description: The Short Product Description for the item.
                     type: string
                     pattern: "^[\\w\\s\\-]+$"
+                    # matches one or more occurrences of either a word character \w, a whitespace character \s, or a hyphen \-
+                    # ensures that the string contains one or more occurrences of either word characters, whitespace characters, or hyphens, and nothing else
                     example: "Mountain Dew 12PK"
                 price:
                     description: The total price payed for this item.
