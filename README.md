@@ -59,7 +59,7 @@ cd fetch-backend-take-home
 
 ## Install dependencies
 
-Run the following command at the root directory to install the required dependencies:
+To install the required backend dependencies, run the following from within the backend directory:
 ```
 npm install
 ```
@@ -74,7 +74,7 @@ npm run build
 
 ## Run the Server
 
-Once the dependencies are installed, run the server using 
+Once the dependencies are installed, enter the backend directory and run the server using 
 ```
 npm start
 ```
@@ -90,7 +90,7 @@ npm start
 This will open the client-side on `http://localhost:3000`.
 
 ## Running Tests with Jest
-Once the dependencies are installed, to run server-side tests, run the following command from the root directory of the project:
+Once the dependencies are installed, to run server-side tests, run the following command from the backend directory of the project:
 
 ```
 npm run test
