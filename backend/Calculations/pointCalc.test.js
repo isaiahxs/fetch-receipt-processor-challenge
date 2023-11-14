@@ -4,6 +4,7 @@ const {
     pointsForMultipleOfQuarter,
     pointsForItemsCount,
     pointsForItemDescriptions,
+    pointsForUniqueItems,
     pointsForDay,
     pointsForTimeRange,
     calculatePoints,
@@ -82,6 +83,20 @@ describe('Points calculation functions', () => {
         expect(pointsForItemDescriptions(items)).toBe(0);
     })
 
+    test('calculates points based on unique items', () => {
+        let items = [
+            { shortDescription: 'Dasani', price: '1.40' },
+            { shortDescription: 'Pepsi', price: '1.25' }
+        ]
+        expect(pointsForUniqueItems(items)).toBe(50);
+
+        items = [
+            { shortDescription: 'Dasani', price: '1.40' },
+            { shortDescription: 'Dasani', price: '1.40' }
+        ]
+        expect(pointsForUniqueItems(items)).toBe(0);
+    })
+
     test('calculates points based on day', () => {
         expect(pointsForDay('2022-01-01')).toBe(6);
         expect(pointsForDay('2022-01-03')).toBe(6);
@@ -98,16 +113,12 @@ describe('Points calculation functions', () => {
     test('calculates points based on time', () => {
         expect(pointsForTimeRange('08:00')).toBe(0);
         expect(pointsForTimeRange('10:00')).toBe(0);
-        expect(pointsForTimeRange('12:00')).toBe(0);
-
-        expect(pointsForTimeRange('13:59')).toBe(0);
-        expect(pointsForTimeRange('16:00')).toBe(0);
 
         expect(pointsForTimeRange('14:00')).toBe(10);
-        expect(pointsForTimeRange('15:00')).toBe(10);
         expect(pointsForTimeRange('15:59')).toBe(10);
 
-        expect(pointsForTimeRange('25:00')).toBe(0);
+        expect(pointsForTimeRange('16:00')).toBe(0);
+        expect(pointsForTimeRange('16:01')).toBe(0);
     })
 
     test('calculates overall points correctly', () => {

@@ -29,6 +29,20 @@ const pointsForItemDescriptions = (items) => {
     return points;
 };
 
+// unique item would have trim and lowercase
+const pointsForUniqueItems = (items) => {
+    const uniqueSet = new Set([]);
+    // console.log(items);
+    for (let item of items) {
+        let shortened = item.shortDescription.trim();
+        if (uniqueSet.has(shortened)) {
+            return 0;
+        }
+        uniqueSet.add(shortened);
+    }
+    return 50;
+}
+
 // 6 points if the day in the purchase date is odd
 const pointsForDay = (purchaseDate) => {
     const day = parseInt(purchaseDate.split('-')[2]);
@@ -41,13 +55,18 @@ const pointsForDay = (purchaseDate) => {
 
 //10 points if the time of purchase is after 2:00PM and before 4:00PM
 const pointsForTimeRange = (purchaseTime) => {
-    const time = purchaseTime.split(':').map(Number);
-    // "08:00"
-    // ['08', '00']
-    // we then map through the array and convert the values to Number type
-    // we then look at 8 since it is at the first position in the array
-    return (time[0] >= 14 && time[0] < 16) ? 10 : 0;
-};
+    console.log(purchaseTime);
+    //split string based on colon
+    let split = purchaseTime.split(':');
+
+    //['08', '13'] -> convert these items to Number types
+    let numberHour = split.map(Number);
+    console.log(numberHour);
+
+    //if first index is greater than or equal to 14 and less than 16, return 10 points
+    if (numberHour[0] >= 14 && numberHour[0] < 16) return 10;
+    return 0;
+}
 
 // Now the main calculatePoints function becomes a composition of these smaller functions.
 const calculatePoints = (receipt) => {
@@ -83,6 +102,7 @@ module.exports = {
     pointsForMultipleOfQuarter,
     pointsForItemsCount,
     pointsForItemDescriptions,
+    pointsForUniqueItems,
     pointsForDay,
     pointsForTimeRange,
     calculatePoints,
